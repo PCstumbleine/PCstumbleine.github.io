@@ -160,7 +160,7 @@
   .pin:focus{outline:none;}
   .pin:focus circle.head{stroke:var(--blue);stroke-width:2.5;}
 
-  .entries{display:flex;flex-direction:column;gap:16px;}
+  .entries{display:flex;flex-direction:column;gap:16px;perspective:1400px;}
   .entry{
     background:var(--card);border:1px solid var(--line);border-left:3px solid var(--sc,var(--clay));
     border-radius:12px;padding:20px 22px;box-shadow:var(--shadow);
@@ -183,13 +183,78 @@
   .entry ul{margin:6px 0 0;padding-left:18px;color:var(--text-soft);font-size:15.5px;}
   .entry ul li{margin-bottom:5px;}
 
-  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  /* ---- Peel tab + photo flip ---- */
+  .entry{position:relative;}
+  .entry.has-photos{overflow:visible;}
+  .peel-tab{
+    position:absolute;top:0;right:0;width:34px;height:34px;cursor:pointer;
+    border:0;padding:0;background:transparent;z-index:3;border-top-right-radius:12px;
+    -webkit-tap-highlight-color:transparent;
+  }
+  /* the visible folded corner */
+  .peel-tab::before{
+    content:"";position:absolute;top:0;right:0;
+    border-width:0 34px 34px 0;border-style:solid;
+    border-color:transparent color-mix(in srgb,var(--sc,var(--clay)) 78%,var(--card)) transparent transparent;
+    border-top-right-radius:12px;
+    transition:border-width .18s ease, filter .18s ease;
+    filter:drop-shadow(-1px 1px 1px rgba(0,0,0,0.15));
+  }
+  /* subtle "lift" curl hint */
+  .peel-tab::after{
+    content:"";position:absolute;top:3px;right:3px;width:11px;height:11px;
+    border-top:2px solid color-mix(in srgb,#fff 70%, transparent);
+    border-right:2px solid color-mix(in srgb,#fff 70%, transparent);
+    border-top-right-radius:3px;opacity:0.6;transition:opacity .18s;
+    pointer-events:none;
+  }
+  .peel-tab:hover::before{border-width:0 44px 44px 0;}
+  .peel-tab:hover::after{opacity:0.9;}
+  .peel-tab:focus-visible{outline:2px solid var(--blue);outline-offset:2px;}
+
+  /* photo panel that flips in over the card */
+  .photo-panel{
+    position:absolute;inset:0;z-index:5;border-radius:12px;overflow:hidden;
+    background:var(--card);border:1px solid var(--line);border-left:3px solid var(--sc,var(--clay));
+    box-shadow:var(--shadow);
+    display:flex;flex-direction:column;
+    transform:rotateY(90deg);transform-origin:right center;
+    transition:transform .38s cubic-bezier(.4,.0,.2,1);
+    pointer-events:none;
+  }
+  .entry.flipped .photo-panel{transform:rotateY(0deg);pointer-events:auto;}
+  .entry.flipped{overflow:visible;min-height:260px;}
+  .photo-panel{min-height:260px;}
+  .entry.flipped{overflow:visible;}
+  .photo-stage{position:relative;flex:1;min-height:0;background:var(--paper-2);display:flex;align-items:center;justify-content:center;}
+  .photo-stage img{width:100%;height:100%;object-fit:cover;display:block;}
+  .photo-ph{/* placeholder look */
+    width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+    color:var(--text-soft);font-size:13px;text-align:center;padding:20px;
+    background:repeating-linear-gradient(45deg,var(--paper-2),var(--paper-2) 10px,color-mix(in srgb,var(--sc,var(--clay)) 8%,var(--paper-2)) 10px,color-mix(in srgb,var(--sc,var(--clay)) 8%,var(--paper-2)) 20px);
+  }
+  .photo-cap{padding:10px 14px;font-size:13px;color:var(--text-soft);background:var(--card);border-top:1px solid var(--line);min-height:38px;display:flex;align-items:center;}
+  .photo-close{position:absolute;top:8px;right:8px;z-index:7;width:28px;height:28px;border-radius:50%;border:0;background:rgba(0,0,0,0.55);color:#fff;font-size:16px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;}
+  .photo-close:hover{background:rgba(0,0,0,0.78);}
+  .photo-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:6;width:34px;height:34px;border-radius:50%;border:0;background:rgba(0,0,0,0.5);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;}
+  .photo-nav:hover{background:rgba(0,0,0,0.75);}
+  .photo-nav.prev{left:8px;}
+  .photo-nav.next{right:8px;}
+  .photo-dots{position:absolute;bottom:46px;left:0;right:0;z-index:6;display:flex;gap:6px;justify-content:center;pointer-events:none;}
+  .photo-dots i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.55);box-shadow:0 0 3px rgba(0,0,0,0.4);transition:background .15s;}
+  .photo-dots i.on{background:#fff;}
+  @media (prefers-reduced-motion:reduce){
+    .photo-panel{transition:opacity .2s ease;transform:none;opacity:0;}
+    .entry.flipped .photo-panel{opacity:1;}
+  }
+
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;perspective:1400px;}
 
   .more-toggle{margin-top:20px;text-align:center;}
   .more-btn{background:var(--card);border:1px solid var(--line-strong);border-radius:8px;padding:10px 20px;font-family:"Inter",sans-serif;font-size:14px;font-weight:600;color:var(--ink);cursor:pointer;transition:border-color .2s,color .2s;}
   .more-btn:hover{border-color:var(--clay);color:var(--clay);}
   #more-roles{display:none;margin-top:16px;}
-  #more-roles.open{display:flex;flex-direction:column;gap:16px;}
+  #more-roles.open{display:flex;flex-direction:column;gap:16px;perspective:1400px;}
 
   .subhead{font-family:"Inter",sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--ink);margin:34px 0 16px;display:flex;align-items:center;gap:10px;}
   .subhead::after{content:"";flex:1;height:1px;background:var(--line);}
@@ -467,32 +532,32 @@
       <p class="section-lead">A selection of awards, fellowships, and honors, in reverse chronological order.</p>
     </div>
     <div class="grid-2">
-      <div class="entry">
+      <div class="entry" id="a-who">
         <h3>World Health Innovation Fellowship</h3>
         <p class="meta"><span>Kalam Institute of Health Technology (WHO)</span><span class="sep">·</span><span>2024</span></p>
         <p>Six-month fellowship studying the medical product landscape with fellows from African countries and organizations including the WHO and UNICEF.</p>
       </div>
-      <div class="entry">
+      <div class="entry" id="a-alumni">
         <h3>Alumni Impact Award</h3>
         <p class="meta"><span>University of Washington</span><span class="sep">·</span><span>2023</span></p>
         <p>First-ever recipient, nominated by fellow alumni of the Technology Innovation program for using that knowledge to make a positive impact on the world.</p>
       </div>
-      <div class="entry">
+      <div class="entry" id="a-fulbright">
         <h3>Fulbright Scholarship</h3>
         <p class="meta"><span>U.S. Department of State</span><span class="sep">·</span><span>2019</span></p>
         <p>Awarded to implement groundwater research with the environmental engineering department at the University of Mauritius.</p>
       </div>
-      <div class="entry">
+      <div class="entry" id="a-makersummit">
         <h3>1st Place, Maker Summit</h3>
         <p class="meta"><span>University of Washington</span><span class="sep">·</span><span>2018</span></p>
         <p>Won the University of Washington's Maker Summit grand prize with two classmates on my design team. We developed a "smart mat" that recognized users' identities from their foot-pressure profiles using machine learning, and received a cash prize.</p>
       </div>
-      <div class="entry">
+      <div class="entry" id="a-bootcamp">
         <h3>Wisconsin Entrepreneurial Bootcamp</h3>
         <p class="meta"><span>Weinert Center, UW–Madison</span><span class="sep">·</span><span>2012</span></p>
         <p>Selected for a one-week intensive training program in technology entrepreneurship for STEM graduate students.</p>
       </div>
-      <div class="entry">
+      <div class="entry" id="a-eagle">
         <h3>Eagle Scout</h3>
         <p class="meta"><span>Boy Scouts of America</span></p>
         <p>Earned the organization's highest rank — planning a service project, serving as Senior Patrol Leader, and earning dozens of merit badges.</p>
@@ -593,6 +658,132 @@
     var t = pin.getAttribute('data-target');
     pin.addEventListener('click', function(){ goToEntry(t); });
     pin.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); goToEntry(t); } });
+  });
+  /* ---------------- Peel-tab photo galleries ----------------
+     To add real photos later, fill in each card's array below.
+     Each photo: { src: "images/filename.jpg", cap: "Caption text" }
+     Leave an array empty (or omit the id) = no tab on that card.
+     A card with [] here still gets a tab showing a placeholder,
+     so you can preview the interaction before adding files.      */
+  var PHOTOS = {
+    // ---- Work ----
+    "e-phd": [
+      {src:"images/phd_gulpers.jpg", cap:"Posing with pit latrine emptiers — known locally as \"gulpers\" — in Mzuzu, Malawi."},
+      {src:"images/phd_market.jpg", cap:"With my research partners and vendors at the Vigwagwa vegetable market in Mzuzu. We collect spoiled organic market waste and feed it to a biogas system I helped establish."},
+      {src:"images/phd_pathogen_test.jpg", cap:"Taking pathogen samples from an experimental biogas system in Mzuzu, Malawi."}
+    ],
+    "e-who": [
+      {src:"images/whif_needs.jpg", cap:"Conducting needs-assessment research on vaccine delivery systems with my colleague from the Ghanaian Health Service."},
+      {src:"images/whif_group_1.jpg", cap:"With other fellows and representatives from the WHO's only Collaborating Centre for Health Innovation, the Kalam Institute of Health Technology."},
+      {src:"images/whif_group_2.jpg", cap:"With many of the other fellows in the World Health Innovation Fellowship, alongside the fellowship coordinator."}
+    ],
+    "e-uw-faculty": [
+      {src:"images/adjunct_award.jpg", cap:"Holding the inaugural Alumni Impact Award from the University of Washington — earned for using my educational experience to make a positive impact on the world."}
+    ],
+    "e-consultant": [
+      {src:"images/consult_competition.jpg", cap:"Young innovators compete for cash prizes at a 2023 national design competition at the University of Lagos, Nigeria."}
+    ],
+    "e-nigeria": [
+      {src:"images/ibadan_solar.jpg", cap:"Standing in front of the solar panel system that powered the UI Design Studio at the University of Ibadan, Nigeria."},
+      {src:"images/ibadan_itig.png", cap:"Young women in a week-long Ignite Tech in Girls bootcamp at the University of Ibadan Design Studio, 2022."},
+      {src:"images/ibadan_itig_2.jpg", cap:"Ignite Tech in Girls participants gained computer design, 3D printing, PowerPoint, team-building, and public-speaking skills."},
+      {src:"images/ibadan_team_building.jpg", cap:"A team-building exercise in the UI Design Studio during the inaugural Girls in Tech bootcamp."},
+      {src:"images/ibadan_sanitation_technology.png", cap:"The 2022 WASH Hackathon, which I helped plan with UNICEF Nigeria and the University of Lagos. Students prototyped solutions to WASH challenges for low-income households."},
+      {src:"images/ibadan_handwash_1.png", cap:"Building the first prototype of the non-contact handwashing device with another innovator."},
+      {src:"images/ibadan_handwash_2.png", cap:"A high-fidelity prototype of the non-contact handwashing device — it attaches to water buckets and dispenses soap and water when a user places their hands below it."},
+      {src:"images/ibadan_handwash_3.jpg", cap:"The handwashing device in use in the UI Design Studio."}
+    ],
+    "e-civic":      [],
+    "e-datasci": [
+      {src:"images/data_visualization.png", cap:"A sample visualization of drug consumption over time at an unnamed health system, developed and presented to state and national public health authorities, researchers, and health-system managers."},
+      {src:"images/data_covid_cases.jpg", cap:"The rapid rise of cases at the THR Health System in the early months of the pandemic. I generated these graphics and shared the data with health and policy leaders nationwide."}
+    ],
+    "e-mauritius": [
+      {src:"images/fulbright_pose.jpg", cap:"With the Director of National Water Resources of the Federal Government of Mauritius."}
+    ],
+    "e-path": [
+      {src:"images/ux_team.jpg", cap:"With two other UX design interns at the PATH offices in Seattle."}
+    ],
+    "e-makerspace": [
+      {src:"images/makerspace_help.jpg", cap:"Explaining a software program to a graduate student in the Technology Innovation program at the University of Washington."}
+    ],
+    "e-ethiopia": [
+      {src:"images/lecturer_winners.png", cap:"As faculty mentor of the winners of Ethiopia's 2016 Undergraduate National Science, Technology and Innovation Contest."},
+      {src:"images/lecturer_distiller.png", cap:"Inspecting an early prototype of a locally designed water distiller with collaborators from GIZ, the German development agency — built to feed distilled water to autoclaves at Jimma University Teaching Hospital."},
+      {src:"images/lecturer_class.png", cap:"Jimma University undergraduates taking my thermodynamics final exam."}
+    ],
+    "e-uganda": [
+      {src:"images/wash_present.jpg", cap:"Working with Ugandan public health experts to deliver education on germ theory and hand hygiene across subsistence-farming villages in eastern Uganda."}
+    ],
+    // ---- Education ----
+    "e-tsinghua":   [{src:"", cap:"Smart-sensor prototype"},{src:"", cap:"Defending my thesis, Beijing"}],
+    "e-uw":         [{src:"", cap:"Global Innovation Exchange"}],
+    "e-uw-ms-bme":  [{src:"", cap:""}],
+    "e-wisconsin":  [{src:"", cap:"Study abroad in Senegal"}],
+    // ---- Awards ----
+    "a-who":        [{src:"", cap:""}],
+    "a-alumni":     [{src:"", cap:"Alumni Impact Award"}],
+    "a-fulbright":  [{src:"", cap:""}],
+    "a-makersummit":[{src:"", cap:"Maker Summit, smart mat project"}],
+    "a-bootcamp":   [{src:"", cap:""}],
+    "a-eagle":      [{src:"", cap:""}]
+  };
+
+  Object.keys(PHOTOS).forEach(function(id){
+    var card = document.getElementById(id);
+    if(!card || !card.classList.contains('entry')) return;
+    var photos = PHOTOS[id];
+    if(!photos || !photos.length) return;
+    card.classList.add('has-photos');
+
+    // peel tab
+    var tab = document.createElement('button');
+    tab.className = 'peel-tab';
+    tab.setAttribute('aria-label','Peel back to see photos');
+    card.appendChild(tab);
+
+    // panel
+    var panel = document.createElement('div');
+    panel.className = 'photo-panel';
+    var multi = photos.length > 1;
+    panel.innerHTML =
+      '<button class="photo-close" aria-label="Close photo">\u2715</button>' +
+      '<div class="photo-stage"></div>' +
+      (multi ? '<button class="photo-nav prev" aria-label="Previous photo">\u2039</button><button class="photo-nav next" aria-label="Next photo">\u203a</button>' : '') +
+      (multi ? '<div class="photo-dots"></div>' : '') +
+      '<div class="photo-cap"></div>';
+    card.appendChild(panel);
+
+    var stage = panel.querySelector('.photo-stage');
+    var cap   = panel.querySelector('.photo-cap');
+    var dots  = panel.querySelector('.photo-dots');
+    var idx = 0;
+
+    function render(){
+      var p = photos[idx];
+      if(p.src){
+        stage.innerHTML = '<img src="'+p.src+'" alt="'+(p.cap||'')+'">';
+      } else {
+        stage.innerHTML = '<div class="photo-ph">Photo coming soon'+(p.cap?'<br>\u2014 '+p.cap:'')+'</div>';
+      }
+      cap.textContent = p.cap || '';
+      cap.style.display = p.cap ? 'flex' : 'none';
+      if(dots){
+        dots.innerHTML = photos.map(function(_,i){return '<i class="'+(i===idx?'on':'')+'"></i>';}).join('');
+      }
+    }
+    function step(d){ idx = (idx + d + photos.length) % photos.length; render(); }
+    function open(){ render(); card.classList.add('flipped'); }
+    function close(){ card.classList.remove('flipped'); }
+
+    tab.addEventListener('click', function(e){ e.stopPropagation(); card.classList.contains('flipped') ? close() : open(); });
+    panel.querySelector('.photo-close').addEventListener('click', function(e){ e.stopPropagation(); close(); });
+    if(multi){
+      panel.querySelector('.prev').addEventListener('click', function(e){ e.stopPropagation(); step(-1); });
+      panel.querySelector('.next').addEventListener('click', function(e){ e.stopPropagation(); step(1); });
+    }
+    // Esc closes when focused within
+    card.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
   });
 </script>
 
