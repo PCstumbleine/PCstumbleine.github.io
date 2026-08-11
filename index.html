@@ -159,6 +159,15 @@
   .pin:hover .plabel,.pin:focus .plabel{opacity:1;}
   .pin:focus{outline:none;}
   .pin:focus circle.head{stroke:var(--blue);stroke-width:2.5;}
+  /* fallback tap targets for mobile, where pins are too small/close to hit reliably */
+  .map-pills{display:none;gap:8px;overflow-x:auto;padding:14px 2px 4px;margin-top:2px;-webkit-overflow-scrolling:touch;}
+  .map-pill{
+    flex:none;font-family:"Inter",sans-serif;font-size:13px;font-weight:600;
+    color:var(--text);background:var(--paper-2);border:1px solid var(--line);
+    border-radius:999px;padding:8px 14px;cursor:pointer;white-space:nowrap;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .map-pill:active{background:color-mix(in srgb,var(--clay) 16%,var(--paper-2));border-color:var(--clay);}
 
   .entries{display:flex;flex-direction:column;gap:16px;perspective:1400px;}
   .entry{
@@ -317,7 +326,10 @@
     .menu-btn{display:flex;}
     section{padding:56px 0;}
     .news a.item{flex-direction:column;gap:4px;}
-    .pin .plabel{opacity:1;font-size:17px;}
+    .pin .plabel{display:none;}
+    .pin circle.head{r:64;}
+    .pin circle.halo{r:120;}
+    .map-pills{display:flex;}
   }
   @media (prefers-reduced-motion:reduce){
     html{scroll-behavior:auto;}
@@ -374,8 +386,8 @@
       <g class="pin" tabindex="0" role="link" data-target="e-mauritius" aria-label="Réduit, Mauritius — Fulbright Scholar"><circle class="halo" cx="1319.4" cy="573.5" r="16"/><circle class="head" cx="1319.4" cy="573.5" r="8"/><text class="plabel" x="1319.4" y="557.5" text-anchor="middle">Réduit</text></g>
       <g class="pin" tabindex="0" role="link" data-target="e-tsinghua" aria-label="Beijing, China — M.S. Tsinghua University"><circle class="halo" cx="1646.7" cy="239.4" r="16"/><circle class="head" cx="1646.7" cy="239.4" r="8"/><text class="plabel" x="1646.7" y="223.4" text-anchor="middle">Beijing</text></g>
       <g class="pin" tabindex="0" role="link" data-target="e-uw-faculty" aria-label="Seattle area, USA — Adjunct Teaching Faculty, University of Washington"><circle class="halo" cx="320.4" cy="196.6" r="16"/><circle class="head" cx="320.4" cy="196.6" r="8"/><text class="plabel" x="320.4" y="180.6" text-anchor="middle">Seattle</text></g>
-      <g class="pin" tabindex="0" role="link" data-target="e-wisconsin|e-uw-ms-bme" aria-label="Madison, USA — University of Wisconsin (B.S. and M.S.)"><circle class="halo" cx="503.3" cy="221.8" r="16"/><circle class="head" cx="503.3" cy="221.8" r="8"/><text class="plabel" x="516.3" y="211.8" text-anchor="start">Madison</text></g>
-      <g class="pin" tabindex="0" role="link" data-target="e-datasci" aria-label="Minneapolis, USA — Data Scientist, LogicStream Health"><circle class="halo" cx="481.9" cy="211.2" r="16"/><circle class="head" cx="481.9" cy="211.2" r="8"/><text class="plabel" x="468.9" y="197.2" text-anchor="end">Minneapolis</text></g>
+      <g class="pin" tabindex="0" role="link" data-target="e-wisconsin|e-uw-ms-bme" aria-label="Madison, USA — University of Wisconsin (B.S. and M.S.)"><circle class="halo" cx="516.2" cy="228.2" r="16"/><circle class="head" cx="516.2" cy="228.2" r="8"/><text class="plabel" x="529.2" y="218.2" text-anchor="start">Madison</text></g>
+      <g class="pin" tabindex="0" role="link" data-target="e-datasci" aria-label="Minneapolis, USA — Data Scientist, LogicStream Health"><circle class="halo" cx="469.0" cy="204.8" r="16"/><circle class="head" cx="469.0" cy="204.8" r="8"/><text class="plabel" x="456.0" y="190.8" text-anchor="end">Minneapolis</text></g>
       <g class="pin" tabindex="0" role="link" data-target="e-uganda" aria-label="Iganga, Uganda — WASH Team Leader"><circle class="halo" cx="1185.9" cy="457.7" r="16"/><circle class="head" cx="1185.9" cy="457.7" r="8"/><text class="plabel" x="1172.9" y="471.7" text-anchor="end">Iganga</text></g>
       <g class="pin" tabindex="0" role="link" data-target="e-wisconsin" aria-label="Saint-Louis, Senegal — study abroad"><circle class="halo" cx="908.4" cy="372.1" r="16"/><circle class="head" cx="908.4" cy="372.1" r="8"/><text class="plabel" x="908.4" y="356.1" text-anchor="middle">Saint-Louis</text></g>
       </svg>
@@ -683,6 +695,26 @@
     pin.addEventListener('click', function(){ goToEntry(t); });
     pin.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); goToEntry(t); } });
   });
+
+  // mobile fallback: a row of tappable place pills, since map pins are
+  // too small/close together to hit reliably on a small touchscreen
+  var mapWrap = document.querySelector('.map-wrap');
+  if(mapWrap){
+    var pillsWrap = document.createElement('div');
+    pillsWrap.className = 'map-pills';
+    document.querySelectorAll('.pin').forEach(function(pin){
+      var t = pin.getAttribute('data-target');
+      var labelEl = pin.querySelector('.plabel');
+      var pill = document.createElement('button');
+      pill.type = 'button';
+      pill.className = 'map-pill';
+      pill.textContent = labelEl ? labelEl.textContent : 'View';
+      pill.setAttribute('aria-label', pin.getAttribute('aria-label') || pill.textContent);
+      pill.addEventListener('click', function(){ goToEntry(t); });
+      pillsWrap.appendChild(pill);
+    });
+    mapWrap.appendChild(pillsWrap);
+  }
   /* ---------------- Peel-tab photo galleries ----------------
      To add real photos later, fill in each card's array below.
      Each photo: { src: "images/filename.jpg", cap: "Caption text" }
