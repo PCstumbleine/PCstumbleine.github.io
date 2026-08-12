@@ -297,17 +297,17 @@
   .pub strong{color:var(--text);font-weight:600;}
   .pub .venue{font-style:italic;}
 
-  .news{display:flex;flex-direction:column;gap:12px;}
+  .news{display:grid;grid-template-columns:1fr 1fr;gap:16px;perspective:1400px;}
   .news a.item{
-    display:flex;justify-content:space-between;align-items:baseline;gap:24px;
+    display:flex;flex-direction:column;align-items:flex-start;gap:8px;
     background:var(--card);border:1px solid var(--line);border-left:3px solid var(--sc,var(--plum));
-    border-radius:12px;padding:16px 20px;color:var(--text);box-shadow:var(--shadow);
+    border-radius:12px;padding:20px 22px;color:var(--text);box-shadow:var(--shadow);
     transition:transform .18s ease,box-shadow .18s ease;
   }
   .news a.item:hover{text-decoration:none;transform:translateY(-2px);}
   .news .headline{font-family:"Fraunces",serif;font-size:18.5px;font-weight:500;color:var(--ink);transition:color .18s;}
   .news a.item:hover .headline{color:var(--plum);}
-  .news .pub-name{font-size:13px;color:var(--text-soft);white-space:nowrap;font-weight:500;}
+  .news .pub-name{font-size:13px;color:var(--text-soft);font-weight:500;}
 
   footer{border-top:1px solid var(--line);padding:46px 0 56px;background:var(--paper-2);transition:background .3s;}
   .foot-inner{max-width:var(--maxw);margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:18px;align-items:center;}
@@ -320,12 +320,12 @@
     .hero-grid{grid-template-columns:1fr;gap:30px;}
     .hero-photo{max-width:260px;}
     .grid-2{grid-template-columns:1fr;}
+    .news{grid-template-columns:1fr;}
     nav ul{display:none;position:absolute;top:64px;left:0;right:0;flex-direction:column;gap:0;background:var(--paper);border-bottom:1px solid var(--line);padding:8px 24px 16px;}
     nav ul.open{display:flex;}
     nav a{display:block;padding:12px 0;border-bottom:1px solid var(--line);}
     .menu-btn{display:flex;}
     section{padding:56px 0;}
-    .news a.item{flex-direction:column;gap:4px;}
     .pin .plabel{display:none;}
     .pin circle.head{r:64;}
     .pin circle.halo{r:120;}
@@ -586,7 +586,7 @@
       <div class="entry" id="a-makersummit">
         <h3>1st Place, Maker Summit</h3>
         <p class="meta"><span>University of Washington</span><span class="sep">·</span><span>2018</span></p>
-        <p>Won the University of Washington's Maker Summit grand prize with two classmates on my design team. We developed a "smart mat" that recognized users' identities from their foot-pressure profiles using machine learning, and received a cash prize.</p>
+        <p>Won the University of Washington's Maker Summit grand prize with two classmates on my design team. We developed a "smart mat" that recognized users' identities from their foot-pressure profiles using machine learning, and received a cash prize. <a href="https://www.youtube.com/watch?v=mKIHwUvhT14" target="_blank" rel="noopener">Watch</a></p>
       </div>
       <div class="entry" id="a-bootcamp">
         <h3>Wisconsin Entrepreneurial Bootcamp</h3>
@@ -731,7 +731,8 @@
     "e-who": [
       {src:"images/whif_needs.jpg", cap:"Conducting needs-assessment research on vaccine delivery systems with my colleague from the Ghanaian Health Service."},
       {src:"images/whif_group_1.jpg", cap:"With other fellows and representatives from the WHO's only Collaborating Centre for Health Innovation, the Kalam Institute of Health Technology."},
-      {src:"images/whif_group_2.jpg", cap:"With many of the other fellows in the World Health Innovation Fellowship, alongside the fellowship coordinator."}
+      {src:"images/whif_group_2.jpg", cap:"With many of the other fellows in the World Health Innovation Fellowship, alongside the fellowship coordinator."},
+      {src:"images/whif_office_photo.jpeg", cap:"Posing for a selfie in the fellowship offices with program coordinators and other fellows. I worked with fellows from Senegal, Ethiopia, Somaliland, Gambia, Ghana, Kenya, Nigeria, Mali, the Democratic Republic of Congo, and Poland. We lived and worked together for six months."}
     ],
     "e-uw-faculty": [
       {src:"images/adjunct_award.jpg", cap:"Holding the inaugural Alumni Impact Award from the University of Washington — earned for using my educational experience to make a positive impact on the world."}
@@ -772,14 +773,22 @@
       {src:"images/wash_present.jpg", cap:"Working with Ugandan public health experts to deliver education on germ theory and hand hygiene across subsistence-farming villages in eastern Uganda."}
     ],
     // ---- Education ----
-    "e-tsinghua":   [{src:"", cap:"Smart-sensor prototype"},{src:"", cap:"Defending my thesis, Beijing"}],
-    "e-uw":         [{src:"", cap:"Global Innovation Exchange"}],
+    "e-tsinghua": [
+      {src:"images/tsinghua_present.png", cap:"Defending my master's thesis to a committee of computer and data science professors at Tsinghua University in Beijing, China in October 2019."},
+      {src:"images/tsinghua_sensor.jpg", cap:"I developed a smart sensor which attaches to the handle of a hand-operated water pump. The sensor analyzes vibration signals and predicts the depth to groundwater using a machine learning model. The technology can be used to gather hydrological data in resource-poor settings. I was awarded a Fulbright Scholarship for this research."}
+    ],
+    "e-uw": [
+      {src:"images/msti_present.jpg", cap:"I worked for six months with classmates from Pakistan, China, and Paraguay to develop an AI-enabled \"cluck recognition technology\" for clients at Microsoft Corporation. The functional prototype analyzed chicken vocalizations and alerted farmers when their flocks were distressed. My role in the team was to create and manage relationships with local farmers — a necessary task for the deployment and testing of this technology."},
+      {src:"images/msti_brainstorm.png", cap:"The innovation and learning space at the University of Washington's Global Innovation Exchange is state-of-the-art. I was in the first cohort of students in the program."},
+      {src:"images/msti_chicken_coop.jpeg", cap:"My team and I visiting a variety poultry farms to find the best location to deploy and test our technology."},
+      {src:"images/msti_chicken_on_computer.jpeg", cap:"Conducting technology research in a chicken coop could at times be challenging."}
+    ],
     "e-uw-ms-bme":  [{src:"", cap:""}],
     "e-wisconsin":  [{src:"", cap:"Study abroad in Senegal"}],
     // ---- Awards ----
     "a-who":        [{src:"", cap:""}],
-    "a-alumni":     [{src:"", cap:"Alumni Impact Award"}],
-    "a-fulbright":  [{src:"", cap:""}],
+    "a-alumni":     [{src:"images/award_impact.png", cap:"I was nominated to be the first recipient of the Alumni Impact Award. Alumni of University of Washington's Technology Innovation program voted to honor me with this award because I used my knowledge in technology innovation to make a positive impact in the world."}],
+    "a-fulbright":  [{src:"images/fulbright_letter.png", cap:"I received this congratulatory letter from US Senator Tina Smith from my home state of Minnesota."}],
     "a-makersummit":[{src:"", cap:"Maker Summit, smart mat project"}],
     "a-bootcamp":   [{src:"", cap:""}],
     "a-eagle":      [{src:"", cap:""}]
@@ -836,7 +845,8 @@
     var card = document.getElementById(id);
     if(!card || !card.classList.contains('entry')) return;
     var photos = PHOTOS[id];
-    if(!photos || !photos.length) return;
+    var hasRealPhoto = photos && photos.some(function(p){ return p.src; });
+    if(!hasRealPhoto) return;
     card.classList.add('has-photos');
 
     var tab = document.createElement('button');
