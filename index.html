@@ -192,42 +192,23 @@
   .entry ul{margin:6px 0 0;padding-left:18px;color:var(--text-soft);font-size:15.5px;}
   .entry ul li{margin-bottom:5px;}
 
-  /* ---- Peel tab -> thumbnail grid -> lightbox ---- */
+  /* ---- Camera button -> thumbnail grid -> lightbox ---- */
   .entry{position:relative;}
   .entry.has-photos{overflow:visible;}
-  .peel-tab{
-    position:absolute;top:8px;right:8px;width:22px;height:22px;cursor:pointer;
-    border:0;padding:0;background:transparent;z-index:6;
+  .photo-btn{
+    position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;
+    cursor:pointer;padding:0;z-index:6;
+    display:flex;align-items:center;justify-content:center;
     -webkit-tap-highlight-color:transparent;
-  }
-  /* small round badge marking the corner */
-  .peel-tab::before{
-    content:"";position:absolute;inset:0;border-radius:50%;
-    background:color-mix(in srgb,var(--sc,var(--clay)) 88%,var(--card));
-    box-shadow:0 1px 3px rgba(0,0,0,0.25);
+    background:linear-gradient(145deg, color-mix(in srgb,var(--card) 80%,#fff) 0%, var(--card) 55%, color-mix(in srgb,var(--card) 88%,#000) 100%);
+    border:1px solid var(--line);
+    box-shadow:0 2px 4px rgba(0,0,0,0.35), 0 1px 0 rgba(255,255,255,0.08) inset;
     transition:transform .15s ease, box-shadow .15s ease;
   }
-  /* tiny lens dot at its center */
-  .peel-tab::after{
-    content:"";position:absolute;top:50%;left:50%;width:6px;height:6px;
-    border-radius:50%;background:#fff;opacity:0.92;
-    transform:translate(-50%,-50%);pointer-events:none;
-  }
-  .peel-tab:hover::before,.peel-tab:focus-visible::before{transform:scale(1.15);box-shadow:0 2px 6px rgba(0,0,0,0.3);}
-  .peel-tab:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:50%;}
-  .entry.photos-open .peel-tab::before{background:color-mix(in srgb,var(--sc,var(--clay)) 100%,black 6%);}
-  /* pulsing ring — the "bullseye" that draws the eye the first time the card is seen */
-  .tab-ping{position:absolute;inset:0;border-radius:50%;pointer-events:none;}
-  .tab-ping::before{
-    content:"";position:absolute;inset:0;border-radius:50%;
-    border:2px solid color-mix(in srgb,var(--sc,var(--clay)) 85%,transparent);
-    opacity:0;
-  }
-  .peel-tab.hint .tab-ping::before{animation:bullseye-ping 1.3s cubic-bezier(0,0,.3,1) 3;}
-  @keyframes bullseye-ping{
-    0%{opacity:0.75;transform:scale(1);}
-    100%{opacity:0;transform:scale(2.6);}
-  }
+  .photo-btn svg{width:16px;height:16px;color:var(--sc,var(--clay));}
+  .photo-btn:hover{box-shadow:0 4px 9px rgba(0,0,0,0.45), 0 1px 0 rgba(255,255,255,0.12) inset;transform:translateY(-1px);}
+  .photo-btn:active{transform:translateY(1px);}
+  .photo-btn:focus-visible{outline:2px solid var(--blue);outline-offset:3px;}
 
   /* photo panel overlays the card and shows a proportional thumbnail grid */
   .photo-panel{
@@ -278,7 +259,7 @@
   @media (prefers-reduced-motion:reduce){
     .photo-panel{transition:opacity .2s ease;transform:none;}
     .thumb:hover{transform:none;}
-    .peel-tab.hint .tab-ping::before{animation:none;}
+    .photo-btn{transition:none;}
   }
 
   .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;perspective:1400px;}
@@ -620,8 +601,8 @@
 
     <h3 class="subhead">Conference Proceedings</h3>
     <p class="pub">Taylor, A., Casserly, P., Osifuwa, D., Arena, S., Arena, C. <strong>Beyond Curricular Silos: A Problem-Based Learning Approach Integrating Ethics and Design using the World Health Organization's Global Breast Cancer Initiative.</strong> Presented at the <span class="venue">Biomedical Engineering Society Annual Conference</span>, San Diego, CA, USA, 2025.</p>
-    <p class="pub"><strong>Development of a non-contact handwashing device to prevent the spread of communicable diseases in Nigeria.</strong> Lead author and presenter — American Society of Tropical Medicine and Hygiene, Seattle, 2022.</p>
-    <p class="pub"><strong>Limited-contact posture change device for ICU patients in Nigeria.</strong> Lead presenter — Biomedical Engineering Society, San Antonio, 2021.</p>
+    <p class="pub">Casserly, Padraic S., et al. <strong>"Development of a Non-Contact Handwashing Device to Prevent the Spread of Communicable Diseases in Nigeria."</strong> <span class="venue">American Society of Tropical Medicine and Hygiene Annual Meeting</span>, 2022, Seattle, WA. Poster presentation.</p>
+    <p class="pub">Casserly, Padraic S., et al. <strong>"Limited-Contact Posture Change Device for ICU Patients in Nigeria."</strong> <span class="venue">Biomedical Engineering Society (BMES) Annual Meeting</span>, 2021, San Antonio, TX. Poster presentation.</p>
 
     <h3 class="subhead">Patents</h3>
     <p class="pub"><strong>Non-contact, adaptable handwashing device.</strong> F/PT/NC/2024/11732 · Issued by the Nigerian Federal Government, Apr 2024. A piece of hardware which, when interfaced with a water bucket, automatically dispenses water and liquid soap onto a user's hand when a proximity sensor is triggered — for use where piped water is unavailable.</p>
@@ -633,7 +614,8 @@
     <p class="pub"><strong>The design and development of appropriate MedTech products in West and East Africa.</strong> Worldwide University Network, 2022. <a href="https://wun.ac.uk/article/workshop-design-development-of-appropriate-medtech-products-in-west-and-east-africa/" target="_blank" rel="noopener">Details</a></p>
 
     <h3 class="subhead">Reviewer</h3>
-    <p class="pub">Peer reviewer for submissions to the <span class="venue">Journal of Biomedical Engineering Education</span> and the <span class="venue">International Symposium on Academic Makerspaces</span>.</p>
+    <p class="pub">Peer reviewer for submissions to the <span class="venue">Journal of Biomedical Engineering Education</span>.</p>
+    <p class="pub">Peer reviewer for submission for conference proceedings for the <span class="venue">International Symposium on Academic Makerspaces</span>.</p>
     <p class="pub">Reviewer of Mandela Washington Fellowship applications from aspiring African leaders, for the U.S. Department of State.</p>
     <p class="pub">Reviewer for applicants to the University of Washington's Technology Innovation program.</p>
   </section>
@@ -787,7 +769,7 @@
     "e-wisconsin":  [{src:"", cap:"Study abroad in Senegal"}],
     // ---- Awards ----
     "a-who":        [{src:"", cap:""}],
-    "a-alumni":     [{src:"images/award_impact.png", cap:"I was nominated to be the first recipient of the Alumni Impact Award. Alumni of University of Washington's Technology Innovation program voted to honor me with this award because I used my knowledge in technology innovation to make a positive impact in the world."}],
+    "a-alumni":     [{src:"images/award_impact.png", cap:"I was nominated to be the first recipient of the Alumni Impact Award. Alumni of University of Washington's Technology Innovation program voted to honor me with this award because I used my knowledge in technology innovation to make a positive impact in the world. Academic Director Linda Wagner and Associate Teaching Professor John Raiti are photographed here providing me with the award."}],
     "a-fulbright":  [{src:"images/fulbright_letter.png", cap:"I received this congratulatory letter from US Senator Tina Smith from my home state of Minnesota."}],
     "a-makersummit":[{src:"", cap:"Maker Summit, smart mat project"}],
     "a-bootcamp":   [{src:"", cap:""}],
@@ -840,7 +822,7 @@
     else if(e.key==='ArrowRight') lbStep(1);
   });
 
-  // build peel tab + thumbnail panel per card
+  // build camera button + thumbnail panel per card
   Object.keys(PHOTOS).forEach(function(id){
     var card = document.getElementById(id);
     if(!card || !card.classList.contains('entry')) return;
@@ -850,9 +832,9 @@
     card.classList.add('has-photos');
 
     var tab = document.createElement('button');
-    tab.className = 'peel-tab';
-    tab.setAttribute('aria-label','Peel back to see photos');
-    tab.innerHTML = '<span class="tab-ping" aria-hidden="true"></span>';
+    tab.className = 'photo-btn';
+    tab.setAttribute('aria-label','View photos');
+    tab.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>';
     card.appendChild(tab);
 
     var panel = document.createElement('div');
@@ -878,25 +860,6 @@
       t.addEventListener('click', function(e){ e.stopPropagation(); lbOriginCard = card; lbOpen(photos, parseInt(t.getAttribute('data-i'),10)); });
     });
   });
-
-  // briefly nudge each peel tab the first time it scrolls into view, so
-  // first-time visitors notice the photos hidden behind the card
-  (function(){
-    var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if(reduce || !('IntersectionObserver' in window)) return;
-    var io = new IntersectionObserver(function(entries){
-      entries.forEach(function(en){
-        if(!en.isIntersecting) return;
-        var tab = en.target;
-        io.unobserve(tab);
-        setTimeout(function(){
-          tab.classList.add('hint');
-          tab.addEventListener('animationend', function(){ tab.classList.remove('hint'); }, {once:true});
-        }, 350);
-      });
-    }, {threshold:0.6});
-    document.querySelectorAll('.peel-tab').forEach(function(tab){ io.observe(tab); });
-  })();
 </script>
 
 </body>
